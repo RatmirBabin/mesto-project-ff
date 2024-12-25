@@ -1,97 +1,104 @@
-import { initialCards } from './cards.js'
-import { openModal, closeModal } from '../components/modal.js'
-import { createCard, deleteCard } from '../components/card.js'
-import '../pages/index.css'
-const profileEditButton = document.querySelector('.profile__edit-button')
-const profileAddButton = document.querySelector('.profile__add-button')
-const profileName = document.querySelector('.profile__title')
-const profileDescription = document.querySelector('.profile__description')
-const editProfilePopup = document.getElementById('editProfilePopup')
-const addCardPopup = document.getElementById('addCardPopup')
-const imagePopup = document.getElementById('imagePopup')
-const popupImage = imagePopup.querySelector('.popup__image')
-const popupCaption = imagePopup.querySelector('.popup__caption')
-const placesList = document.querySelector('.places__list')
-const editProfileForm = document.getElementById('editProfileForm')
-const addCardForm = document.getElementById('addCardForm')
-const profileNameInput = editProfileForm.querySelector(
-  '.popup__input_type_name'
-)
-const profileJobInput = editProfileForm.querySelector(
-  '.popup__input_type_description'
-)
-const cardNameInput = addCardForm.querySelector('.popup__input_type_card-name')
-const cardLinkInput = addCardForm.querySelector('.popup__input_type_url')
+import { initialCards } from "./cards.js";
+import { openModal, closeModal } from "../components/modal.js";
+import { createCard, deleteCard } from "../components/card.js";
+import "../pages/index.css";
 
-function addCard(
-  cardData,
-  placesList,
-  handleCardClick,
-  handleDeleteCard,
-  handleLikeClick
-) {
+// Элементы DOM
+const profileEditButton = document.querySelector(".profile__edit-button");
+const profileAddButton = document.querySelector(".profile__add-button");
+const profileName = document.querySelector(".profile__title");
+const profileDescription = document.querySelector(".profile__description");
+const editProfilePopup = document.getElementById("editProfilePopup");
+const addCardPopup = document.getElementById("addCardPopup");
+const imagePopup = document.getElementById("imagePopup");
+const popupImage = imagePopup.querySelector(".popup__image");
+const popupCaption = imagePopup.querySelector(".popup__caption");
+const placesList = document.querySelector(".places__list");
+const editProfileForm = document.getElementById("editProfileForm");
+const addCardForm = document.getElementById("addCardForm");
+const profileNameInput = editProfileForm.querySelector(
+  ".popup__input_type_name"
+);
+const profileJobInput = editProfileForm.querySelector(
+  ".popup__input_type_description"
+);
+const cardNameInput = addCardForm.querySelector(".popup__input_type_card-name");
+const cardLinkInput = addCardForm.querySelector(".popup__input_type_url");
+
+// Функция для обработки лайков
+function likeCard(likeButton) {
+  likeButton.classList.toggle("card__like-button_is-active");
+  console.log(
+    `Лайк был ${
+      likeButton.classList.contains("card__like-button_is-active")
+        ? "поставлен"
+        : "снят"
+    }`
+  );
+}
+
+// Функция добавления карточки
+function addCard(cardData) {
   const cardElement = createCard(
     cardData,
     handleCardClick,
-    handleDeleteCard,
-    handleLikeClick
-  )
-  placesList.prepend(cardElement)
+    deleteCard,
+    likeCard // Передаем функцию для обработки лайков
+  );
+  placesList.prepend(cardElement);
 }
 
-function handleCardClick(link, alt, name) {
-  popupImage.src = link
-  popupImage.alt = alt
-  popupCaption.textContent = name
-  openModal(imagePopup)
+function handleCardClick(cardData) {
+  popupImage.src = cardData.link;
+  popupImage.alt = cardData.name;
+  popupCaption.textContent = cardData.name;
+  openModal(imagePopup);
 }
 
-profileEditButton.addEventListener('click', () => {
-  profileNameInput.value = profileName.textContent
-  profileJobInput.value = profileDescription.textContent
-  openModal(editProfilePopup)
-})
+// Обработчики событий
+profileEditButton.addEventListener("click", () => {
+  profileNameInput.value = profileName.textContent;
+  profileJobInput.value = profileDescription.textContent;
+  openModal(editProfilePopup);
+});
 
-profileAddButton.addEventListener('click', () => {
-  openModal(addCardPopup)
-})
+profileAddButton.addEventListener("click", () => {
+  openModal(addCardPopup);
+});
 
-editProfileForm.addEventListener('submit', (evt) => {
-  evt.preventDefault()
-  profileName.textContent = profileNameInput.value
-  profileDescription.textContent = profileJobInput.value
-  closeModal(editProfilePopup)
-})
+editProfileForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  profileName.textContent = profileNameInput.value;
+  profileDescription.textContent = profileJobInput.value;
+  closeModal(editProfilePopup);
+});
 
-addCardForm.addEventListener('submit', (evt) => {
-  evt.preventDefault()
-  const newCardData = { name: cardNameInput.value, link: cardLinkInput.value }
-  addCard(newCardData, placesList, handleCardClick, deleteCard)
-  cardNameInput.value = ''
-  cardLinkInput.value = ''
-  closeModal(addCardPopup)
-})
+addCardForm.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const newCardData = { name: cardNameInput.value, link: cardLinkInput.value };
+  addCard(newCardData);
+  cardNameInput.value = "";
+  cardLinkInput.value = "";
+  closeModal(addCardPopup);
+});
 
-const closeModalOut = (popup) => {
-  closeModal(popup)
-}
-
+// Закрытие модальных окон
 const setCloseListener = () => {
-  const popupList = Array.from(document.querySelectorAll('.popup'))
+  const popupList = Array.from(document.querySelectorAll(".popup"));
   popupList.forEach((popup) => {
-    popup.addEventListener('click', (event) => {
+    popup.addEventListener("click", (event) => {
       if (
-        event.target.classList.contains('popup') ||
-        event.target.classList.contains('popup__close')
+        event.target.classList.contains("popup") ||
+        event.target.classList.contains("popup__close")
       ) {
-        closeModalOut(popup)
+        closeModal(popup); // Просто вызываем closeModal
       }
-    })
-  })
-}
+    });
+  });
+};
+setCloseListener();
 
-setCloseListener()
-
+// Загрузка начальных карточек
 initialCards.forEach((cardData) => {
-  addCard(cardData, placesList, handleCardClick, deleteCard)
-})
+  addCard(cardData);
+});
