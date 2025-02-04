@@ -1,9 +1,9 @@
 // api.js
 
 const config = {
-  baseUrl: 'https://mesto.nomoreparties.co/v1/cohort-68',
+  baseUrl: 'https://mesto.nomoreparties.co/v1/wff-cohort-32',
   headers: {
-    Authorization: '84ea1e46-d5a8-4474-bc0b-e051ea435c21',
+    Authorization: '654f0cd8-c995-443c-ada6-9b11b8c278f7',
     'Content-Type': 'application/json',
   },
 }
