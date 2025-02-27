@@ -10,7 +10,6 @@ export function getResponse(res) {
   if (res.ok) {
     return res.json();
   }
-
   return Promise.reject(res);
 }
 
@@ -22,7 +21,6 @@ async function requestApi(path, method = "GET", body = null) {
   if (body) {
     params.body = JSON.stringify(body);
   }
-  console.log(params);
 
   return fetch(`${configData.baseUrl}/${path}`, params).then(getResponse);
 }
@@ -38,9 +36,11 @@ export function deleteCardRequest(id) {
 export function getProfileDataApi() {
   return requestApi("users/me");
 }
+
 export function getInitialCardsApi() {
   return requestApi("cards");
 }
+
 export function editProfileData(editFirstName, discription) {
   return requestApi("users/me", "PATCH", {
     name: editFirstName,

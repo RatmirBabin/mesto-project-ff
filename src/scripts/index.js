@@ -9,15 +9,7 @@ import {
   getInitialCardsApi,
   getProfileDataApi,
 } from "../components/api.js";
-
-export const selectors = {
-  formSelector: ".popup__form",
-  inputSelector: ".popup__input",
-  submitButtonSelector: ".popup__button",
-  inactiveButtonClass: "popup__button_disabled",
-  inputErrorClass: "popup__input_type_error",
-  errorClass: "popup__error_visible",
-};
+import { selectors } from "../constants.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const profileEditButton = document.querySelector(".profile__edit-button");
@@ -67,7 +59,14 @@ document.addEventListener("DOMContentLoaded", () => {
       userId = userProf._id;
       setDataProfile(userProf);
       cards.forEach((cardData) => {
-        addCard(cardData, userId);
+        const cardElement = createCard(
+          cardData,
+          handleCardClick,
+          userId,
+          deleteCardApi,
+          likeCard
+        );
+        placesList.append(cardElement);
       });
     })
     .catch((e) => {
@@ -81,16 +80,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Функция добавления карточки
-  function addCard(cardData) {
-    const cardElement = createCard(
-      cardData,
-      handleCardClick,
-      userId,
-      deleteCardApi,
-      likeCard
-    );
-    placesList.prepend(cardElement);
-  }
 
   function handleCardClick(cardData) {
     popupImage.src = cardData.link;
@@ -137,10 +126,15 @@ document.addEventListener("DOMContentLoaded", () => {
     cardPopupFormBtn.textContent = "Сохранение...";
 
     addCardApi(cardNameInput.value, cardLinkInput.value)
-      .then((cardElement) => {
-        addCard(cardElement);
-        cardNameInput.value = "";
-        cardLinkInput.value = "";
+      .then((cardData) => {
+        const cardElement = createCard(
+          cardData,
+          handleCardClick,
+          userId,
+          deleteCardApi,
+          likeCard
+        );
+        placesList.prepend(cardElement);
         closeModal(addCardPopup);
       })
       .catch((e) => {
