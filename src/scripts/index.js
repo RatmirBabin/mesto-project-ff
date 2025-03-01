@@ -1,7 +1,10 @@
 import { openModal, closeModal } from "../components/modal.js";
 import { createCard, deleteCardApi, likeCard } from "../components/card.js";
 import "../pages/index.css";
-import { enableValidation } from "../components/validations.js";
+import {
+  clearValidation,
+  enableValidation,
+} from "../components/validations.js";
 import {
   addCardApi,
   editAvatarApi,
@@ -24,6 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const editProfilePopup = document.getElementById("editProfilePopup");
   const addCardPopup = document.getElementById("addCardPopup");
   const cardPopupFormBtn = addCardPopup.querySelector(".button");
+  const cardPopupForm = addCardPopup.querySelector("form");
+  const popupProfileForm = editProfilePopup.querySelector("form");
   const profilePopupFormBtn = editProfilePopup.querySelector(".button");
   const imagePopup = document.getElementById("imagePopup");
   const avatarPopupEdit = document.querySelector(".popup__avatar-edit");
@@ -90,6 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Обработчик изменения профиля
   profileEditButton.addEventListener("click", () => {
+    clearValidation(popupProfileForm, profilePopupFormBtn, selectors);
     profileNameInput.value = profileName.textContent;
     profileJobInput.value = profileDescription.textContent;
     openModal(editProfilePopup);
@@ -114,10 +120,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Обработчик изменения аватара
   avatarEditButton.addEventListener("click", () => {
+    clearValidation(avatarForm, avatarPopupEditBtn, selectors);
     openModal(avatarPopupEdit);
   });
   // Обработчик добавления карточки
   profileAddButton.addEventListener("click", () => {
+    clearValidation(cardPopupForm, cardPopupFormBtn, selectors);
     openModal(addCardPopup);
   });
 
